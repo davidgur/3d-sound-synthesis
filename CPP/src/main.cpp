@@ -17,7 +17,9 @@ int main(int, char *argv[]) {
     std::cout << "\tSample Rate: " << sound_file.sample_rate << std::endl;
     std::cout << "\tDuration: " << sound_file.left.size() / sound_file.sample_rate << " seconds" << std::endl;
 
-    //sound_file.write("data/wav_test/write_test.wav");
+    if (sound_file.write("data/wav_test/write_test.wav")) {
+        std::cout << "Error writing new WAV file!" << std::endl;
+    }
 
     return 0;
 }

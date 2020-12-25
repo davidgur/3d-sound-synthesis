@@ -1,5 +1,9 @@
 /*
-    WAVFile.h contains the class WAVFile, which allows for simple
+    WAVFile.h contains the class WAVFile, which allows for simple reading and writing of a .wav file.
+
+    Author: David Gurevich (dgurevic (at) uwaterloo (dot) ca)
+
+    Copyright (c) David Gurevich 2020
  */
 
 #ifndef CPP_WAVFILE_H
@@ -13,10 +17,10 @@
 class WAVFile {
 public:
     // Constructor
-    WAVFile(const std::string &file_name);
+    explicit WAVFile(const std::string &file_name);
 
     // Write function
-    int write(const std::string &name);
+    [[nodiscard]] int write(const std::string &name) const;
 
     // Header Data
     int frames;
@@ -28,10 +32,8 @@ public:
     std::vector<double> left;
     std::vector<double> right;
 
-    bool read_complete = false;
-
 private:
-    std::vector<double> merge_left_right(const std::vector<double> &left, const std::vector<double> &right);
+    static std::vector<double> merge_left_right(const std::vector<double> &left, const std::vector<double> &right);
 };
 
 
