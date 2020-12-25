@@ -8,18 +8,12 @@
 
 #include <iostream>
 #include "../include/WAVFile.h"
+#include "../include/interpolation.h"
 
 int main(int, char *argv[]) {
-    WAVFile sound_file = WAVFile(argv[1]);
+    WAVFile HRIR = hrir_interpolation(37, 0);
 
-    std::cout << "WAV File Specifications:" << std::endl;
-    std::cout << "\tChannels: " << sound_file.channels << std::endl;
-    std::cout << "\tSample Rate: " << sound_file.sample_rate << std::endl;
-    std::cout << "\tDuration: " << sound_file.left.size() / sound_file.sample_rate << " seconds" << std::endl;
-
-    if (sound_file.write("data/wav_test/write_test.wav")) {
-        std::cout << "Error writing new WAV file!" << std::endl;
-    }
+    std::cout << HRIR.summary() << std::endl;
 
     return 0;
 }

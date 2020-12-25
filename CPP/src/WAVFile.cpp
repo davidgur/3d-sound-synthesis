@@ -8,6 +8,13 @@
 
 #include "../include/WAVFile.h"
 
+WAVFile::WAVFile() {
+    format = 65538;
+    frames = 0;
+    channels = 2;
+    sample_rate = 44100;
+}
+
 WAVFile::WAVFile(const std::string &file_name) {
     std::filesystem::path path = file_name;
     if (std::filesystem::is_regular_file(path)) {
@@ -46,8 +53,6 @@ int WAVFile::write(const std::string &name) const {
         return 0;
     else
         return 1;
-
-
 }
 
 std::vector<double> WAVFile::merge_left_right(const std::vector<double> &left, const std::vector<double> &right) {
@@ -63,5 +68,17 @@ std::vector<double> WAVFile::merge_left_right(const std::vector<double> &left, c
 
         return merged;
     }
+}
+
+const std::string WAVFile::summary() {
+    std::string header_text = "[WAV FILE SUMMARY]\n";
+    std::string format_text = "\t Format: " + std::to_string(format) + "\n";
+    std::string channel_text = "\t Channels: " + std::to_string(channels) + "\n";
+    std::string frames_text = "\t Frames: " + std::to_string(frames) + "\n";
+    std::string sample_rate_text = "\t Sampling Rate: " + std::to_string(sample_rate) + "\n";
+    std::string duration_text = "\t Duration: " + std::to_string(frames / sample_rate) + "s. \n";
+
+    std::string summary = header_text + format_text + channel_text + frames_text + sample_rate_text + duration_text;
+    return summary;
 }
 

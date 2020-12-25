@@ -17,10 +17,15 @@
 class WAVFile {
 public:
     // Constructor
+    WAVFile();
+
     explicit WAVFile(const std::string &file_name);
 
     // Write function
     [[nodiscard]] int write(const std::string &name) const;
+
+    // Summarize function
+    const std::string summary();
 
     // Header Data
     int frames;
