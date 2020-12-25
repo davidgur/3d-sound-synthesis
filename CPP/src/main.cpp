@@ -1,8 +1,15 @@
-#include <iostream>
+/*
+    Main function of C++ implementation of 3D sound localizer
 
+    Author: David Gurevich (dgurevic (at) uwaterloo (dot) ca)
+
+    Copyright (c) David Gurevich 2020
+ */
+
+#include <iostream>
 #include "../include/WAVFile.h"
 
-int main(int, char* argv[]) {
+int main(int, char *argv[]) {
     WAVFile sound_file = WAVFile(argv[1]);
 
     std::cout << "WAV File Specifications:" << std::endl;
