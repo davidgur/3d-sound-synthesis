@@ -9,28 +9,28 @@
 #include "../include/interpolation.h"
 
 
-WAVFile hrir_interpolation(int theta, int phi) {
-    int A_phi = get_next_phi(phi);
-    int B_phi = A_phi;
-    int C_phi = get_prev_phi(A_phi);
+WAVFile hrir_interpolation(double theta, double phi) {
+    double A_phi = get_next_phi(phi);
+    double B_phi = A_phi;
+    double C_phi = get_prev_phi(A_phi);
 
-    int A_theta = get_next_theta(theta, A_phi);
-    int B_theta = get_prev_theta(theta, B_phi);
-    int C_theta = get_nearest_theta(theta, C_phi);
+    double A_theta = get_next_theta(theta, A_phi);
+    double B_theta = get_prev_theta(theta, B_phi);
+    double C_theta = get_nearest_theta(theta, C_phi);
 
     if (A_theta == B_theta && B_theta == C_theta) {
         return load_hrir(theta, phi);
     }
 
-    int delta_theta_grid = B_theta - A_theta;
-    int delta_theta_A = theta - A_theta;
-    int delta_theta_AC = C_theta - A_theta;
+    double delta_theta_grid = B_theta - A_theta;
+    double delta_theta_A = theta - A_theta;
+    double delta_theta_AC = C_theta - A_theta;
 
-    int delta_phi_grid = C_phi - A_phi;
-    int delta_phi = phi - A_phi;
+    double delta_phi_grid = C_phi - A_phi;
+    double delta_phi = phi - A_phi;
 
-    double W_C = static_cast<double>(delta_phi) / delta_phi_grid;
-    double W_B = (static_cast<double>(delta_theta_A) - W_C * delta_theta_AC) / delta_theta_grid;
+    double W_C = delta_phi / delta_phi_grid;
+    double W_B = (delta_theta_A - W_C * delta_theta_AC) / delta_theta_grid;
     double W_A = 1 - W_B - W_C;
 
     // Load HRIR A, B, and C
@@ -56,7 +56,7 @@ WAVFile hrir_interpolation(int theta, int phi) {
     return HRIR;
 }
 
-WAVFile load_hrir(int theta, int phi) {
+WAVFile load_hrir(double theta, double phi) {
     std::vector<int> possible_theta = get_possible_theta(phi);
 
     bool theta_possible = std::find(possible_theta.begin(), possible_theta.end(), theta) != possible_theta.end();
@@ -103,7 +103,7 @@ std::vector<int> get_possible_theta(int phi) {
     return possible_theta;
 }
 
-int get_prev_phi(int phi) {
+int get_prev_phi(double phi) {
     for (auto i = possible_phi.rbegin(); i != possible_phi.rend(); i++) {
         if (*i < phi)
             return *i;
@@ -111,7 +111,7 @@ int get_prev_phi(int phi) {
     return 0;
 }
 
-int get_nearest_phi(int phi) {
+int get_nearest_phi(double phi) {
     const auto lower_it = std::lower_bound(possible_phi.begin(), possible_phi.end(), phi);
     const auto upper_it = std::upper_bound(possible_phi.begin(), possible_phi.end(), phi);
 
@@ -122,7 +122,7 @@ int get_nearest_phi(int phi) {
     }
 }
 
-int get_next_phi(int phi) {
+int get_next_phi(double phi) {
     for (auto i = possible_phi.begin(); i != possible_phi.end(); i++) {
         if (*i > phi)
             return *i;
@@ -130,7 +130,7 @@ int get_next_phi(int phi) {
     return 0;
 }
 
-int get_prev_theta(int theta, int phi) {
+int get_prev_theta(double theta, double phi) {
     std::vector<int> possible_theta = get_possible_theta(phi);
 
     for (auto i = possible_theta.rbegin(); i != possible_theta.rend(); i++) {
@@ -140,7 +140,7 @@ int get_prev_theta(int theta, int phi) {
     return 0;
 }
 
-int get_nearest_theta(int theta, int phi) {
+int get_nearest_theta(double theta, double phi) {
     std::vector<int> possible_theta = get_possible_theta(phi);
 
     const auto lower_it = std::lower_bound(possible_theta.begin(), possible_theta.end(), theta);
@@ -153,7 +153,7 @@ int get_nearest_theta(int theta, int phi) {
     }
 }
 
-int get_next_theta(int theta, int phi) {
+int get_next_theta(double theta, double phi) {
     std::vector<int> possible_theta = get_possible_theta(phi);
 
     for (auto i = possible_theta.begin(); i != possible_theta.end(); i++) {
