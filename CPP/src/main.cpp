@@ -26,7 +26,7 @@ int main(int, char *argv[]) {
     WAVFile output;
 
     if (demo_mode)
-        output = demo(source, 20, 5);
+        output = demo(source, 10, 5);
     else
         output = localize(source, theta, phi, true);
 

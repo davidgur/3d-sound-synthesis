@@ -6,6 +6,7 @@
     Copyright (c) David Gurevich 2020
  */
 
+#include <iostream>
 #include "../include/interpolation.h"
 
 
@@ -52,6 +53,14 @@ WAVFile hrir_interpolation(double theta, double phi) {
         HRIR.right = vector_sum(A.right, B.right, C.right);
 
         HRIR.frames = HRIR.left.size();
+    }
+
+    auto best_fit_left = best_fit_line(HRIR.left);
+    auto best_fit_right = best_fit_line(HRIR.right);
+
+    for (int i = 0; i < HRIR.left.size(); i++) {
+        HRIR.left[i] -= best_fit_left[i];
+        HRIR.right[i] -= best_fit_right[i];
     }
 
     return HRIR;
@@ -188,11 +197,11 @@ void scale_vector(double scalar, std::vector<double> &vec) {
 std::vector<double> best_fit_line(const std::vector<double> &vec) {
     // Best fit line: y = a + bx
     // Calculate relevant values:
-    double Sx, Sy, Sxx, Sxy;
-    int N = vec.size() - 1;
+    double Sx = 0, Sy = 0, Sxx = 0, Sxy = 0;
+    double N = vec.size() - 1.0;
 
-    Sx = 1 / 2 * N * (N - 1);
-    Sxx = 1 / 6 * N * (N - 1) * (2 * N - 1);
+    Sx = (N * (N - 1)) / 2.0;
+    Sxx = (N * (N - 1) * (2 * N - 1)) / 6.0;
 
     for (int i = 0; i < vec.size(); i++) {
         Sy += vec[i];
