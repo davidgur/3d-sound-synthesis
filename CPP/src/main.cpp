@@ -7,17 +7,28 @@
  */
 
 #include <iostream>
-#include "../include/localize.h"
+#include "../include/demo.h"
 
 int main(int, char *argv[]) {
     double theta = std::stod(argv[2]);
     double phi = std::stod(argv[3]);
 
+    bool demo_mode = false;
+
+    if (theta == 0 && phi == 0) {
+        demo_mode = true;
+    }
+
     std::string source_file = argv[1];
     std::string output_file = argv[4];
 
     WAVFile source = WAVFile(source_file);
-    WAVFile output = localize(source, theta, phi);
+    WAVFile output;
+
+    if (demo_mode)
+        output = demo(source, 20, 5);
+    else
+        output = localize(source, theta, phi, true);
 
     int status = output.write(output_file);
     if (!status) {

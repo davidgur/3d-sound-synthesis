@@ -14,6 +14,6 @@
 #include "../include/convolution.h"
 #include "../include/itd.h"
 
-WAVFile localize(const WAVFile &source, double theta, double phi);
+WAVFile localize(const WAVFile &source, double theta, double phi, bool use_itd);
 
 #endif //CPP_LOCALIZE_H

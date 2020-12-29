@@ -57,6 +57,27 @@ std::vector<double> convolve(const std::vector<double> &signal, std::vector<doub
         position += step_size;
     }
 
+    // One more to get the remaining bit
+    for (int i = position; i < Nx; i++) {
+        in_fft[i - position] = signal[i];
+    }
+    for (int i = Nx; i < N; i++) {
+        in_fft[i] = 0;
+    }
+    fftw_execute(p_x);
+
+    // Fill H*x
+    for (int i = 0; i < N; i++) {
+        in_ifft[i][REAL] = (out_fft[i][REAL] * H[i][REAL]) - (out_fft[i][COMP] * H[i][COMP]);
+        in_ifft[i][COMP] = (out_fft[i][REAL] * H[i][COMP]) + (out_fft[i][COMP] * H[i][REAL]);
+    }
+    fftw_execute(p_y);
+
+    for (int i = 0; i < Nx - position; i++) {
+        y[position + i] += out_ifft[i];
+    }
+
+
     fftw_destroy_plan(p_filter);
     fftw_destroy_plan(p_x);
     fftw_destroy_plan(p_y);

@@ -5,6 +5,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CPP src/main.cpp src/WAVFile.cpp include/WAVFile.h include/interpolation.h src/interpolation.cpp src/convolution.cpp include/convolution.h src/itd.cpp include/itd.h src/localize.cpp include/localize.h)
+add_executable(CPP src/main.cpp src/WAVFile.cpp include/WAVFile.h include/interpolation.h src/interpolation.cpp src/convolution.cpp include/convolution.h src/itd.cpp include/itd.h src/localize.cpp include/localize.h src/demo.cpp include/demo.h)
 
 target_link_libraries(CPP PRIVATE sndfile fftw3)

@@ -10,6 +10,8 @@
 
 
 WAVFile hrir_interpolation(double theta, double phi) {
+    WAVFile HRIR;
+
     double A_phi = get_next_phi(phi);
     double B_phi = A_phi;
     double C_phi = get_prev_phi(A_phi);
@@ -19,39 +21,38 @@ WAVFile hrir_interpolation(double theta, double phi) {
     double C_theta = get_nearest_theta(theta, C_phi);
 
     if (A_theta == B_theta && B_theta == C_theta) {
-        return load_hrir(theta, phi);
+        HRIR = load_hrir(theta, phi);
+    } else {
+
+        double delta_theta_grid = B_theta - A_theta;
+        double delta_theta_A = theta - A_theta;
+        double delta_theta_AC = C_theta - A_theta;
+
+        double delta_phi_grid = C_phi - A_phi;
+        double delta_phi = phi - A_phi;
+
+        double W_C = delta_phi / delta_phi_grid;
+        double W_B = (delta_theta_A - W_C * delta_theta_AC) / delta_theta_grid;
+        double W_A = 1 - W_B - W_C;
+
+        // Load HRIR A, B, and C
+        WAVFile A = load_hrir(A_theta, A_phi);
+        WAVFile B = load_hrir(B_theta, B_phi);
+        WAVFile C = load_hrir(C_theta, C_phi);
+
+        scale_vector(W_A, A.left);
+        scale_vector(W_A, A.right);
+        scale_vector(W_B, B.left);
+        scale_vector(W_B, B.right);
+        scale_vector(W_C, C.left);
+        scale_vector(W_C, C.right);
+
+        // Build new HRIR
+        HRIR.left = vector_sum(A.left, B.left, C.left);
+        HRIR.right = vector_sum(A.right, B.right, C.right);
+
+        HRIR.frames = HRIR.left.size();
     }
-
-    double delta_theta_grid = B_theta - A_theta;
-    double delta_theta_A = theta - A_theta;
-    double delta_theta_AC = C_theta - A_theta;
-
-    double delta_phi_grid = C_phi - A_phi;
-    double delta_phi = phi - A_phi;
-
-    double W_C = delta_phi / delta_phi_grid;
-    double W_B = (delta_theta_A - W_C * delta_theta_AC) / delta_theta_grid;
-    double W_A = 1 - W_B - W_C;
-
-    // Load HRIR A, B, and C
-    WAVFile A = load_hrir(A_theta, A_phi);
-    WAVFile B = load_hrir(B_theta, B_phi);
-    WAVFile C = load_hrir(C_theta, C_phi);
-
-    scale_vector(W_A, A.left);
-    scale_vector(W_A, A.right);
-    scale_vector(W_B, B.left);
-    scale_vector(W_B, B.right);
-    scale_vector(W_C, C.left);
-    scale_vector(W_C, C.right);
-
-    // Build new HRIR
-    WAVFile HRIR = WAVFile();
-
-    HRIR.left = vector_sum(A.left, B.left, C.left);
-    HRIR.right = vector_sum(A.right, B.right, C.right);
-
-    HRIR.frames = HRIR.left.size();
 
     return HRIR;
 }
@@ -83,6 +84,8 @@ WAVFile load_hrir(double theta, double phi) {
 
 std::vector<int> get_possible_theta(int phi) {
     std::vector<int> possible_theta;
+
+    phi = (phi + 360) % 360;
 
     // build phi to have a width of 3
     std::stringstream ss;
@@ -180,4 +183,31 @@ vector_sum(const std::vector<double> &A, const std::vector<double> &B, const std
 
 void scale_vector(double scalar, std::vector<double> &vec) {
     std::transform(vec.begin(), vec.end(), vec.begin(), [&scalar](double &c) { return c * scalar; });
+}
+
+std::vector<double> best_fit_line(const std::vector<double> &vec) {
+    // Best fit line: y = a + bx
+    // Calculate relevant values:
+    double Sx, Sy, Sxx, Sxy;
+    int N = vec.size() - 1;
+
+    Sx = 1 / 2 * N * (N - 1);
+    Sxx = 1 / 6 * N * (N - 1) * (2 * N - 1);
+
+    for (int i = 0; i < vec.size(); i++) {
+        Sy += vec[i];
+        Sxy += i * vec[i];
+    }
+
+    double beta = ((N * Sxy) - (Sx * Sy)) / ((N * Sxx) - (Sx * Sx));
+    double alpha = (Sy / N) - ((beta * Sx) / N);
+
+    // Create best fit line
+    std::vector<double> best_fit(vec.size());
+
+    for (int i = 0; i < vec.size(); i++) {
+        best_fit[i] = alpha + (beta * i);
+    }
+
+    return best_fit;
 };

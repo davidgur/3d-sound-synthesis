@@ -25,6 +25,8 @@ std::vector<double> vector_sum(const std::vector<double> &A,
                                const std::vector<double> &B,
                                const std::vector<double> &C);
 
+std::vector<double> best_fit_line(const std::vector<double> &vec);
+
 void scale_vector(double scalar, std::vector<double> &vec);
 
 int get_prev_phi(double phi);
