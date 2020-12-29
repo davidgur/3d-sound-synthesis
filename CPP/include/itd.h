@@ -9,7 +9,7 @@
 #ifndef CPP_ITD_H
 #define CPP_ITD_H
 
-#include <math.h>
+#include <cmath>
 
 #define HEAD_RADIUS 0.0875
 #define SPEED_SOUND 343
