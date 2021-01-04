@@ -3,7 +3,7 @@
 
     Author: David Gurevich (dgurevic (at) uwaterloo (dot) ca)
 
-    Copyright (c) David Gurevich 2020
+    Copyright (c) David Gurevich 2021
  */
 #include "../include/localize.h"
 
@@ -19,6 +19,8 @@ WAVFile localize(const WAVFile &source, double theta, double phi, bool use_itd) 
     std::vector<double> right;
 
     if (use_itd) {
+        // If we care about the ITD, then we have to properly delay the left/right
+        // signals, which is done by resizing and adding zeros appropriately.
         if (itd <= 0) {
             right.resize(abs(itd), 0);
             right.insert(right.end(), convolved_right.begin(), convolved_right.end());

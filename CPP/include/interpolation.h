@@ -1,9 +1,22 @@
 /*
     interpolation.h contains functions and values necessary for bilinear interpolation of HRIR filters (in WAV files)
 
+    The dataset used in this project to get the HRIR is quite sparse.
+    However, we want to be able to determine the HRIR at any given location.
+    We are able to do this by interpolating the HRIR functions that are
+    provided by our dataset. This is done using the generalized bilinear
+    interpolation method as described in "Interpolation of Head-Related
+    Transfer Frunctions (HRTFS): A Multi-Source approach" by Freeland,
+    Biscainho, and Diniz.
+
+    Freeland, F. P., Biscainho, L. W., & Diniz, P. S. (2004, September).
+    Interpolation of head-related transfer functions (HRTFs): A multi-source
+    approach. In 2004 12th European Signal Processing Conference
+    (pp. 1761-1764). IEEE.
+
     Author: David Gurevich (dgurevic (at) uwaterloo (dot) ca)
 
-    Copyright (c) David Gurevich 2020
+    Copyright (c) David Gurevich 2021
  */
 
 #ifndef CPP_INTERPOLATION_H

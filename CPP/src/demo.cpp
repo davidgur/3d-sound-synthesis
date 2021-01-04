@@ -1,6 +1,11 @@
-//
-// Created by david on 12/28/20.
-//
+/*
+    Functions that allow for a "demo mode" which makes the given audio sound as though it is circling around the user.
+
+    Author: David Gurevich (dgurevic (at) uwaterloo (dot) ca)
+
+    Copyright (c) David Gurevich 2021
+ */
+
 
 #include "../include/demo.h"
 #include <iostream>

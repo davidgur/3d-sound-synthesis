@@ -3,7 +3,7 @@
 
     Author: David Gurevich (dgurevic (at) uwaterloo (dot) ca)
 
-    Copyright (c) David Gurevich 2020
+    Copyright (c) David Gurevich 2021
  */
 
 #include "../include/convolution.h"
